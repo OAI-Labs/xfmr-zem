@@ -1,0 +1,71 @@
+# Medical Domain Configuration
+domain:
+  name: "medical"
+  description: "Healthcare and clinical text processing"
+
+# Domain-specific parameters
+parameters:
+  language: "en"
+  min_doc_length: 100
+  max_doc_length: 50000
+  quality_threshold: 0.7
+
+# Pipeline steps configuration
+steps:
+  # NeMo Curator steps
+  nemo_curator:
+    - name: "pii_removal"
+      enabled: true
+      params:
+        remove_phi: true  # Protected Health Information
+        anonymize_names: true
+        anonymize_dates: true
+        anonymize_locations: true
+    
+    - name: "deduplication"
+      enabled: true
+      params:
+        method: "minhash"
+        threshold: 0.8
+        ngram_size: 5
+    
+    - name: "quality_filtering"
+      enabled: true
+      params:
+        min_word_count: 50
+        max_word_count: 10000
+        remove_duplicates: true
+
+  # DataJuicer steps
+  datajuicer:
+    - name: "language_filter"
+      enabled: true
+      params:
+        lang: "en"
+        min_score: 0.8
+    
+    - name: "medical_terminology_filter"
+      enabled: true
+      params:
+        medical_terms_dict: "./dicts/medical_terms.txt"
+        min_medical_term_ratio: 0.05
+    
+    - name: "perplexity_filter"
+      enabled: true
+      params:
+        max_perplexity: 1500
+        model: "gpt2"
+
+# Domain-specific quality metrics
+quality_metrics:
+  - "medical_term_coverage"
+  - "clinical_coherence"
+  - "phi_removal_rate"
+  - "document_structure_score"
+
+# Special handling
+special_handling:
+  preserve_medical_abbreviations: true
+  preserve_drug_names: true
+  preserve_icd_codes: true
+  hipaa_compliance: true

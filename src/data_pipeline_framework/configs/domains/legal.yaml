@@ -1,0 +1,80 @@
+# Legal Domain Configuration
+domain:
+  name: "legal"
+  description: "Legal documents and court proceedings processing"
+
+# Domain-specific parameters
+parameters:
+  language: "en"
+  min_doc_length: 200
+  max_doc_length: 100000
+  quality_threshold: 0.75
+
+# Pipeline steps configuration
+steps:
+  # NeMo Curator steps
+  nemo_curator:
+    - name: "pii_removal"
+      enabled: true
+      params:
+        remove_phi: false
+        anonymize_names: false  # Legal docs need names
+        anonymize_dates: false
+        anonymize_locations: false
+        redact_ssn: true
+    
+    - name: "deduplication"
+      enabled: true
+      params:
+        method: "exact_hash"
+        threshold: 0.95
+        ngram_size: 10
+    
+    - name: "quality_filtering"
+      enabled: true
+      params:
+        min_word_count: 100
+        max_word_count: 50000
+        remove_duplicates: false
+
+  # DataJuicer steps
+  datajuicer:
+    - name: "language_filter"
+      enabled: true
+      params:
+        lang: "en"
+        min_score: 0.85
+    
+    - name: "legal_citation_extractor"
+      enabled: true
+      params:
+        extract_case_citations: true
+        extract_statute_citations: true
+        citation_format: "bluebook"
+    
+    - name: "document_structure_filter"
+      enabled: true
+      params:
+        require_sections: true
+        min_section_count: 3
+    
+    - name: "perplexity_filter"
+      enabled: true
+      params:
+        max_perplexity: 2000
+        model: "legal-bert"
+
+# Domain-specific quality metrics
+quality_metrics:
+  - "citation_accuracy"
+  - "legal_terminology_density"
+  - "document_structure_completeness"
+  - "jurisdiction_coverage"
+
+# Special handling
+special_handling:
+  preserve_citations: true
+  preserve_legal_terms: true
+  preserve_case_numbers: true
+  preserve_formatting: true
+  section_aware_processing: true
