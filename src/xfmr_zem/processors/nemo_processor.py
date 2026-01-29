@@ -11,7 +11,7 @@ from pathlib import Path
 import re
 from loguru import logger
 
-from data_pipeline_framework.core import Operator
+from xfmr_zem.core import Operator
 
 # Check for optional dependencies
 try:

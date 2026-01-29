@@ -2,8 +2,8 @@
 General Text Cleaning Pipeline
 """
 
-from data_pipeline_framework.core import Pipeline
-from data_pipeline_framework.processors import NemoProcessor, DataJuicerProcessor
+from xfmr_zem.core import Pipeline
+from xfmr_zem.processors import NemoProcessor, DataJuicerProcessor
 
 
 class TextCleaningPipeline(Pipeline):

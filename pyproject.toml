@@ -1,14 +1,14 @@
 [project]
-name = "data-pipeline-framework"
+name = "xfmr-zem"
 version = "0.1.0"
-description = "Unified Data Pipeline Framework combining ZenML, NemoCurator, and DataJuicer"
+description = "Unified Data Pipeline Framework (ZenML + NeMo Curator + DataJuicer) for multi-domain processing"
 readme = "README.md"
 requires-python = ">=3.10,<3.13"
 license = {text = "MIT"}
 authors = [
     {name = "Khai Hoang", email = "khaihq@vbiacademy.edu.vn"}
 ]
-keywords = ["data-pipeline", "zenml", "nemo-curator", "data-juicer", "mlops"]
+keywords = ["xfmr-zem", "data-pipeline", "zenml", "nemo-curator", "data-juicer", "mlops"]
 
 dependencies = [
     "pandas>=2.0.0",
@@ -43,14 +43,15 @@ dev = [
 ]
 
 [project.scripts]
-dpf = "data_pipeline_framework.cli:main"
+xz = "xfmr_zem.cli:main"
+dpf = "xfmr_zem.cli:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/data_pipeline_framework"]
+packages = ["src/xfmr_zem"]
 
 [tool.ruff]
 line-length = 100

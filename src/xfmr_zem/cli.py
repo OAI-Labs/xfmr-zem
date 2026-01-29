@@ -31,7 +31,7 @@ def info():
 @main.command()
 def operators():
     """List available operators"""
-    from data_pipeline_framework.processors import NemoProcessor, DataJuicerProcessor
+    from xfmr_zem.processors import NemoProcessor, DataJuicerProcessor
     
     console.print("\n[bold]NemoCurator Operations:[/bold]")
     table = Table(show_header=True, header_style="bold magenta")

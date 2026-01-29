@@ -9,9 +9,9 @@ YAML config file, no coding required.
 from typing import Any, Dict, List, Optional
 from loguru import logger
 
-from data_pipeline_framework.core import Pipeline
-from data_pipeline_framework.processors import NemoProcessor, DataJuicerProcessor
-from data_pipeline_framework.utils.config_loader import ConfigLoader, DomainConfig
+from xfmr_zem.core import Pipeline
+from xfmr_zem.processors import NemoProcessor, DataJuicerProcessor
+from xfmr_zem.utils.config_loader import ConfigLoader, DomainConfig
 
 
 class DomainPipelineFactory:

@@ -2,9 +2,9 @@
 Pre-built pipelines and factory for domain-specific pipelines
 """
 
-from data_pipeline_framework.pipelines.legal_pipeline import LegalDataPipeline
-from data_pipeline_framework.pipelines.text_pipeline import TextCleaningPipeline
-from data_pipeline_framework.pipelines.domain_pipeline_factory import (
+from xfmr_zem.pipelines.legal_pipeline import LegalDataPipeline
+from xfmr_zem.pipelines.text_pipeline import TextCleaningPipeline
+from xfmr_zem.pipelines.domain_pipeline_factory import (
     DomainPipelineFactory,
     create_domain_pipeline,
 )

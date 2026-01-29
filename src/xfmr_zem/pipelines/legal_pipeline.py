@@ -5,8 +5,8 @@ Legal Data Pipeline - Specialized pipeline for Vietnamese legal documents
 from typing import Optional
 from loguru import logger
 
-from data_pipeline_framework.core import Pipeline
-from data_pipeline_framework.processors import NemoProcessor, DataJuicerProcessor
+from xfmr_zem.core import Pipeline
+from xfmr_zem.processors import NemoProcessor, DataJuicerProcessor
 
 
 class LegalDataPipeline(Pipeline):

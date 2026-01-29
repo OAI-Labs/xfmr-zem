@@ -13,7 +13,7 @@ Config-Driven Architecture:
     Add a new domain by simply creating a YAML config file in configs/domains/
     
 Example:
-    from data_pipeline_framework import create_domain_pipeline
+    from xfmr_zem import create_domain_pipeline
     
     # Create pipeline from YAML config - no class needed!
     pipeline = create_domain_pipeline("medical")
@@ -23,16 +23,16 @@ Example:
 __version__ = "0.1.0"
 __author__ = "Khai Hoang"
 
-from data_pipeline_framework.core import Pipeline, Step, Operator
-from data_pipeline_framework.processors import (
+from xfmr_zem.core import Pipeline, Step, Operator
+from xfmr_zem.processors import (
     NemoProcessor,
     DataJuicerProcessor,
 )
-from data_pipeline_framework.pipelines import (
+from xfmr_zem.pipelines import (
     DomainPipelineFactory,
     create_domain_pipeline,
 )
-from data_pipeline_framework.utils import ConfigLoader
+from xfmr_zem.utils import ConfigLoader
 
 __all__ = [
     "Pipeline",

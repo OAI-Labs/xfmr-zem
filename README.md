@@ -1,170 +1,69 @@
-# Data Pipeline Framework
+# xfmr-zem
 
-Unified data pipeline framework combining **ZenML**, **NemoCurator**, and **DataJuicer** for multi-domain data processing.
+**Unified Data Pipeline Framework** combining **ZenML**, **NeMo Curator**, and **DataJuicer** for scalable, config-driven multi-domain data processing.
 
 ## Features
 
-- **ZenML Integration**: Orchestration, visualization, and experiment tracking
-- **NemoCurator**: Industrial-grade data curation (deduplication, quality filtering, PII removal)
-- **DataJuicer**: 50+ operators for text processing
-- **Domain-specific Pipelines**: Pre-built pipelines for legal, medical, general text
-- **Flexible Architecture**: Plug-and-play operators with MCP-style communication
+- **Config-Driven Architecture**: Add new domains (Medical, Legal, Finance, etc.) simply by adding a YAML configuration file. No new code required!
+- **Unified Orchestration**: Powered by ZenML for robust pipeline management, tracking, and reproducibility.
+- **Advanced Processing**: Integrates NeMo Curator and DataJuicer for state-of-the-art text curation, deduplication, and quality filtering.
+- **Multi-Domain Ready**: Pre-configured for Medical, Legal, and Finance domains with specialized logic (PII removal, citation extraction, etc.).
 
 ## Installation
 
 ```bash
-# Using uv (recommended)
-uv sync
-
-# Or pip
-pip install -e .
-
-# With GPU support
-uv sync --extra gpu
+pip install xfmr-zem
 ```
 
 ## Quick Start
 
-### Using Pre-built Pipelines
-
-```python
-from data_pipeline_framework.pipelines import LegalDataPipeline
-
-# Create pipeline for Vietnamese legal documents
-pipeline = LegalDataPipeline(
-    name="vn-legal-pipeline",
-    enable_dedup=True,
-    enable_quality_filter=True,
-    min_text_length=100,
-    language="vi"
-)
-
-# Run pipeline
-result = pipeline.run(input_data)
-```
-
-### Custom Pipeline
-
-```python
-from data_pipeline_framework import Pipeline
-from data_pipeline_framework.processors import NemoProcessor, DataJuicerProcessor
-
-# Create custom pipeline
-pipeline = Pipeline(name="my-pipeline", domain="legal")
-
-# Add operators
-pipeline.add_operator(
-    name="unicode_fix",
-    operator=NemoProcessor(name="unicode", operation="unicode_fix")
-)
-
-pipeline.add_operator(
-    name="clean_html",
-    operator=DataJuicerProcessor(
-        name="html",
-        category="mapper",
-        operator_name="clean_html"
-    )
-)
-
-pipeline.add_operator(
-    name="dedup",
-    operator=NemoProcessor(name="dedup", operation="fuzzy_dedup")
-)
-
-# Run
-result = pipeline.run(data)
-```
-
-### CLI
+### 1. Run a Pipeline
 
 ```bash
-# Show info
-dpf info
+# Run the medical pipeline
+xz run medical
 
-# List operators
-dpf operators
-
-# Show templates
-dpf templates --domain legal
-
-# Run pipeline
-dpf run config.yaml -i input/ -o output/
+# Run the finance pipeline
+xz run finance
 ```
 
-## Architecture
+### 2. Python API
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Data Pipeline Framework                   │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
-│  │    ZenML     │  │ NemoCurator  │  │  DataJuicer  │      │
-│  │              │  │              │  │              │      │
-│  │ Orchestration│  │ - Dedup      │  │ - 50+ ops    │      │
-│  │ Visualization│  │ - Quality    │  │ - Mappers    │      │
-│  │ Tracking     │  │ - PII        │  │ - Filters    │      │
-│  └──────────────┘  └──────────────┘  └──────────────┘      │
-│                                                              │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │                 Pipeline Engine (Core)                 │  │
-│  │  - Step orchestration                                  │  │
-│  │  - Config management                                   │  │
-│  │  - Plugin architecture                                 │  │
-│  └───────────────────────────────────────────────────────┘  │
-│                                                              │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │              Pre-built Domain Pipelines                │  │
-│  │  - LegalDataPipeline                                   │  │
-│  │  - TextCleaningPipeline                                │  │
-│  │  - (Medical, Code, etc. - extensible)                  │  │
-│  └───────────────────────────────────────────────────────┘  │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
+```python
+from xfmr_zem import create_domain_pipeline
+
+# Create generic pipeline from config
+pipeline = create_domain_pipeline("medical")
+result = pipeline.run(my_data)
 ```
 
-## Directory Structure
+### 3. Add a New Domain
 
-```
-data-pipeline-framework/
-├── pyproject.toml
-├── README.md
-├── src/
-│   └── data_pipeline_framework/
-│       ├── __init__.py
-│       ├── core.py              # Pipeline, Step, Operator base classes
-│       ├── cli.py               # CLI commands
-│       ├── processors/
-│       │   ├── nemo_processor.py      # NemoCurator wrapper
-│       │   └── datajuicer_processor.py # DataJuicer wrapper
-│       ├── pipelines/
-│       │   ├── legal_pipeline.py      # Legal docs pipeline
-│       │   └── text_pipeline.py       # General text pipeline
-│       ├── operators/           # Custom operators
-│       ├── configs/             # Config templates
-│       └── utils/               # Utilities
-├── tests/
-└── examples/
+Create `src/xfmr_zem/configs/domains/my_new_domain.yaml`:
+
+```yaml
+domain:
+  name: "my_new_domain"
+  description: "My custom domain processing"
+
+steps:
+  nemo_curator:
+    - name: "deduplication"
+      enabled: true
 ```
 
-## Supported Operations
+Then run it:
 
-### NemoCurator
-- `language_id` - Language identification
-- `unicode_fix` - Unicode normalization
-- `exact_dedup` - Exact deduplication
-- `fuzzy_dedup` - Fuzzy/near deduplication (MinHash LSH)
-- `semantic_dedup` - Semantic deduplication (embeddings)
-- `quality_filter` - Quality-based filtering
-- `pii_removal` - PII detection and removal
-- `text_cleaning` - General text cleaning
+```bash
+xz run my_new_domain
+```
 
-### DataJuicer
-- **Mappers**: clean_html, clean_links, fix_unicode, punctuation_normalization, whitespace_normalization, remove_header_footer, sentence_split
-- **Filters**: language_filter, perplexity_filter, text_length_filter, word_num_filter, special_char_filter, flagged_word_filter
-- **Deduplicators**: document_simhash, document_minhash, ray_dedup
+## Development
 
-## License
+```bash
+# Install in editable mode
+pip install -e ".[dev]"
 
-MIT
+# Run tests
+pytest
+```
