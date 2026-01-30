@@ -168,6 +168,11 @@ def mcp_generic_step(
              # Fallback if tool returns raw data (unlikely strict MCP but possible in custom impl)
              output_data = result_data if isinstance(result_data, dict) else {"raw": str(result_data)}
         
+        if isinstance(output_data, list):
+            print(f"[{server_name}] Output: {len(output_data)} items")
+        elif isinstance(output_data, dict) and "data" in output_data:
+            print(f"[{server_name}] Output: {len(output_data['data'])} items")
+
         return output_data
         
     except Exception as e:

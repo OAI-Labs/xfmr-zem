@@ -65,13 +65,16 @@ def operators():
 
 @main.command()
 @click.argument("config_file", type=click.Path(exists=True))
-def run(config_file):
+@click.option("--params", "-p", type=click.Path(exists=True), help="Path to custom parameters.yml")
+def run(config_file, params):
     """Run a pipeline from a YAML configuration file"""
     abs_config = os.path.abspath(config_file)
     console.print(f"[bold green]Starting Pipeline:[/bold green] {abs_config}")
+    if params:
+        console.print(f"[bold blue]Custom Parameters:[/bold blue] {params}")
     
     try:
-        client = PipelineClient(abs_config)
+        client = PipelineClient(abs_config, params_path=params)
         run_response = client.run()
         
         console.print(f"\n[bold blue]Pipeline Execution Finished![/bold blue]")

@@ -1,23 +1,28 @@
 """
-Zem
-===
+xfmr-zem (Zem)
+==============
 
 A unified data pipeline framework combining:
-- ZenML: Orchestration and visualization
-- NeMo Curator: Data curation and processing
-- DataJuicer: Data processing operators
+- Model Context Protocol (MCP): For modular, specialized processing servers.
+- ZenML: For production-grade orchestration and pipeline tracking.
 
-Designed for multi-domain data processing (legal, medical, finance, and custom domains).
+xfmr-zem allows you to build complex data processing workflows by connecting
+multiple MCP servers as pipeline steps, all orchestrated by ZenML.
 
-Config-Driven Architecture:
-    Add a new domain by simply creating a YAML config file in configs/domains/
-    
+Key Features:
+    * **Config-Driven Architecture**: Define your entire pipeline in a simple YAML configuration.
+    * **MCP Server Integration**: Leverage any MCP-compatible server as a processing block.
+    * **ZenML Orchestration**: Production-grade tracking, caching, and visualization of data flows.
+    * **Multi-Domain Ready**: Designed for modular tasks like curation, extraction, and filtering.
+
 Example:
-    from xfmr_zem import create_domain_pipeline
+    from xfmr_zem import PipelineClient
+
+    # Initialize client with a pipeline configuration
+    client = PipelineClient("configs/medical_pipeline.yaml")
     
-    # Create pipeline from YAML config - no class needed!
-    pipeline = create_domain_pipeline("medical")
-    result = pipeline.run(data)
+    # Build and execute the ZenML pipeline
+    client.run()
 """
 
 __version__ = "0.1.0"
