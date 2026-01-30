@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Unified Data Pipeline Framework (ZenML + NeMo Curator + DataJuicer) for multi-domain processing"
 readme = "README.md"
 requires-python = ">=3.10,<3.13"
-license = {text = "MIT"}
+license = "Apache-2.0"
 authors = [
     {name = "Khai Hoang", email = "khaihq@vbiacademy.edu.vn"}
 ]
@@ -17,6 +17,9 @@ dependencies = [
     "click>=8.0.0",
     "rich>=13.0.0",
     "loguru>=0.7.0",
+    "fastmcp>=0.1.0",
+    "mcp>=0.1.0",
+    "zenml[local,server]>=0.75.0",
 ]
 
 [project.optional-dependencies]
@@ -43,8 +46,8 @@ dev = [
 ]
 
 [project.scripts]
+zem = "xfmr_zem.cli:main"
 xz = "xfmr_zem.cli:main"
-dpf = "xfmr_zem.cli:main"
 
 [build-system]
 requires = ["hatchling"]

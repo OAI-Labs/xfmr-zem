@@ -1,0 +1,17 @@
+# NeMo Curator Server Configuration
+# Defaults extracted from nemo_processor.py
+
+# Fuzzy Deduplication
+threshold: 0.8
+
+# Quality Filter
+min_word_count: 50
+max_word_count: 10000
+
+# PII Removal
+anonymize_names: true
+anonymize_dates: true
+remove_phi: false
+
+# Language ID
+target_language: "en"

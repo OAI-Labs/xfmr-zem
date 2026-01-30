@@ -1,10 +1,10 @@
 """
-Data Pipeline Framework
-=======================
+Zem
+===
 
 A unified data pipeline framework combining:
 - ZenML: Orchestration and visualization
-- NemoCurator: Data curation and processing
+- NeMo Curator: Data curation and processing
 - DataJuicer: Data processing operators
 
 Designed for multi-domain data processing (legal, medical, finance, and custom domains).
@@ -23,24 +23,8 @@ Example:
 __version__ = "0.1.0"
 __author__ = "Khai Hoang"
 
-from xfmr_zem.core import Pipeline, Step, Operator
-from xfmr_zem.processors import (
-    NemoProcessor,
-    DataJuicerProcessor,
-)
-from xfmr_zem.pipelines import (
-    DomainPipelineFactory,
-    create_domain_pipeline,
-)
-from xfmr_zem.utils import ConfigLoader
+from xfmr_zem.client import PipelineClient
 
 __all__ = [
-    "Pipeline",
-    "Step", 
-    "Operator",
-    "NemoProcessor",
-    "DataJuicerProcessor",
-    "DomainPipelineFactory",
-    "create_domain_pipeline",
-    "ConfigLoader",
+    "PipelineClient",
 ]

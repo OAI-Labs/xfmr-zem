@@ -1,61 +1,59 @@
-# xfmr-zem
+# Zem
 
 **Unified Data Pipeline Framework** combining **ZenML**, **NeMo Curator**, and **DataJuicer** for scalable, config-driven multi-domain data processing.
 
 ## Features
 
-- **Config-Driven Architecture**: Add new domains (Medical, Legal, Finance, etc.) simply by adding a YAML configuration file. No new code required!
-- **Unified Orchestration**: Powered by ZenML for robust pipeline management, tracking, and reproducibility.
-- **Advanced Processing**: Integrates NeMo Curator and DataJuicer for state-of-the-art text curation, deduplication, and quality filtering.
-- **Multi-Domain Ready**: Pre-configured for Medical, Legal, and Finance domains with specialized logic (PII removal, citation extraction, etc.).
+- **MCP Architecture**: Standalone, modular servers for domain logic (NeMo Curator, DataJuicer).
+- **Config-Driven**: Define complex pipelines using simple YAML files.
+- **ZenML Integration**: automatic tracking, visualization, and caching (optional).
+- **Dynamic Visualization**: Steps are labeled dynamically in the ZenML dashboard (e.g., `nemo_pii_removal`).
 
-## Installation
+## Getting Started
+
+### 1. Requirements
+
+- Python 3.10+
+- `uv` (recommended)
+
+### 2. Run a Pipeline
 
 ```bash
-pip install xfmr-zem
+# Run pii removal and cleaning with NeMo Curator
+uv run zem run tests/manual/nemo_config.yaml
+
+# Run comprehensive filtering with DataJuicer
+uv run zem run tests/manual/data_juicer_config.yaml
 ```
 
-## Quick Start
-
-### 1. Run a Pipeline
+### 3. Visualize with ZenML
 
 ```bash
-# Run the medical pipeline
-xz run medical
-
-# Run the finance pipeline
-xz run finance
+# Start ZenML server (use allowed port range: 8871-8879)
+uv run zenml up --port 8871
 ```
 
-### 2. Python API
+## Architecture
 
-```python
-from xfmr_zem import create_domain_pipeline
+`Zem` uses the **Model Context Protocol (MCP)**:
+- **Servers**: Reside in `src/xfmr_zem/servers/`. Each server exposes tools via standard stdio JSON-RPC.
+- **Client**: `PipelineClient` reads your config and executes tools across servers using ZenML steps.
 
-# Create generic pipeline from config
-pipeline = create_domain_pipeline("medical")
-result = pipeline.run(my_data)
-```
-
-### 3. Add a New Domain
-
-Create `src/xfmr_zem/configs/domains/my_new_domain.yaml`:
+## YAML Configuration
 
 ```yaml
-domain:
-  name: "my_new_domain"
-  description: "My custom domain processing"
+name: my_custom_pipeline
 
-steps:
-  nemo_curator:
-    - name: "deduplication"
-      enabled: true
-```
+servers:
+  nemo: src/xfmr_zem/servers/nemo_curator/server.py
+  dj: src/xfmr_zem/servers/data_juicer/server.py
 
-Then run it:
-
-```bash
-xz run my_new_domain
+pipeline:
+  - nemo.pii_removal:
+      input:
+        data: [{"text": "Hello World"}]
+  - dj.clean_html:
+      input: {} # Implicitly takes data from pii_removal
 ```
 
 ## Development
@@ -67,3 +65,7 @@ pip install -e ".[dev]"
 # Run tests
 pytest
 ```
+
+## License
+
+This project is licensed under the Apache License, Version 2.0 - see the [LICENSE](LICENSE) file for details.

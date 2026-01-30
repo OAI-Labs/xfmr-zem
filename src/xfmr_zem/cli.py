@@ -1,11 +1,14 @@
 """
-CLI for Data Pipeline Framework
+CLI for Zem - Unified Data Pipeline Framework (MCP + ZenML)
 """
 
+import os
 import click
 from rich.console import Console
 from rich.table import Table
 from loguru import logger
+
+from xfmr_zem.client import PipelineClient
 
 console = Console()
 
@@ -13,83 +16,80 @@ console = Console()
 @click.group()
 @click.version_option(version="0.1.0")
 def main():
-    """Data Pipeline Framework CLI - ZenML + NemoCurator + DataJuicer"""
+    """Zem CLI - ZenML + MCP (NeMo Curator & DataJuicer)"""
     pass
 
 
 @main.command()
 def info():
     """Show framework information"""
-    console.print("[bold blue]Data Pipeline Framework[/bold blue]")
+    console.print("[bold blue]Zem: Unified Data Pipeline Framework[/bold blue]")
     console.print("Version: 0.1.0")
+    console.print("\nArchitecture: [green]Model Context Protocol (MCP) + ZenML[/green]")
     console.print("\nIntegrations:")
-    console.print("  - ZenML: Orchestration & Visualization")
-    console.print("  - NemoCurator: Data Curation & Processing")
-    console.print("  - DataJuicer: Data Processing Operators")
+    console.print("  - [bold]ZenML[/bold]: Orchestration, Visualization & Artifact Tracking")
+    console.print("  - [bold]MCP Servers[/bold]: Standalone units for domain-specific logic")
+    console.print("  - [bold]NeMo Curator[/bold]: NVIDIA's high-performance curation")
+    console.print("  - [bold]DataJuicer[/bold]: Comprehensive data processing operators")
 
 
 @main.command()
 def operators():
-    """List available operators"""
-    from xfmr_zem.processors import NemoProcessor, DataJuicerProcessor
+    """List available MCP tools and servers"""
     
-    console.print("\n[bold]NemoCurator Operations:[/bold]")
-    table = Table(show_header=True, header_style="bold magenta")
-    table.add_column("Operation")
-    table.add_column("Description")
+    # NeMo Curator Tools
+    console.print("\n[bold magenta]NeMo Curator Server Tools:[/bold magenta]")
+    nemo_table = Table(show_header=True, header_style="bold cyan")
+    nemo_table.add_column("Tool Name")
+    nemo_table.add_column("Description")
     
-    for op in NemoProcessor.SUPPORTED_OPERATIONS:
-        table.add_row(op, "")
-    console.print(table)
+    nemo_table.add_row("pii_removal", "Remove PII using NeMo Curator")
+    nemo_table.add_row("text_cleaning", "General text cleaning using NeMo Curator")
+    console.print(nemo_table)
     
-    console.print("\n[bold]DataJuicer Operators:[/bold]")
-    for category, ops in DataJuicerProcessor.OPERATOR_CATEGORIES.items():
-        console.print(f"\n[cyan]{category}:[/cyan]")
-        for op in ops:
-            console.print(f"  - {op}")
+    # DataJuicer Tools
+    console.print("\n[bold magenta]DataJuicer Server Tools:[/bold magenta]")
+    dj_table = Table(show_header=True, header_style="bold cyan")
+    dj_table.add_column("Tool Name")
+    dj_table.add_column("Description")
+    
+    dj_table.add_row("clean_html", "Remove HTML tags")
+    dj_table.add_row("clean_links", "Remove URLs/Links")
+    dj_table.add_row("fix_unicode", "Normalize Unicode (NFKC)")
+    dj_table.add_row("whitespace_normalization", "Clean extra spaces/newlines")
+    dj_table.add_row("text_length_filter", "Filter by character length")
+    dj_table.add_row("language_filter", "Heuristic-based language filtering")
+    dj_table.add_row("document_simhash_dedup", "Simple SimHash-based deduplication")
+    console.print(dj_table)
 
 
 @main.command()
-@click.option("--domain", type=click.Choice(["legal", "general"]), default="legal")
-def templates(domain):
-    """Show pipeline templates for domain"""
-    if domain == "legal":
-        console.print("[bold]Legal Data Pipeline Template[/bold]")
-        console.print("""
-Steps:
-1. unicode_normalization - Fix unicode issues
-2. text_cleaning - Remove HTML, clean text
-3. remove_header_footer - Remove page headers/footers
-4. language_filter - Filter Vietnamese documents
-5. length_filter - Remove short documents
-6. quality_filter - Filter by quality score
-7. exact_dedup - Remove exact duplicates
-8. fuzzy_dedup - Remove near-duplicates
-        """)
-    else:
-        console.print("[bold]General Text Pipeline Template[/bold]")
-        console.print("""
-Steps:
-1. unicode_fix - Fix unicode issues
-2. clean_html - Remove HTML tags
-3. clean_links - Remove URLs
-4. normalize_whitespace - Clean whitespace
-5. language_filter - Filter by language
-6. deduplication - Remove duplicates
-        """)
-
-
-@main.command()
-@click.argument("config_file")
-@click.option("--input", "-i", required=True, help="Input data path")
-@click.option("--output", "-o", required=True, help="Output data path")
-def run(config_file, input, output):
-    """Run a pipeline from config file"""
-    console.print(f"[bold]Running pipeline from:[/bold] {config_file}")
-    console.print(f"Input: {input}")
-    console.print(f"Output: {output}")
-    # TODO: Implement config loading and pipeline execution
+@click.argument("config_file", type=click.Path(exists=True))
+def run(config_file):
+    """Run a pipeline from a YAML configuration file"""
+    abs_config = os.path.abspath(config_file)
+    console.print(f"[bold green]Starting Pipeline:[/bold green] {abs_config}")
+    
+    try:
+        client = PipelineClient(abs_config)
+        run_response = client.run()
+        
+        console.print(f"\n[bold blue]Pipeline Execution Finished![/bold blue]")
+        console.print(f"Run Name: [cyan]{run_response.name}[/cyan]")
+        console.print(f"Status: [yellow]{run_response.status}[/yellow]")
+        
+        console.print(f"\n[dim]To visualize this run, ensure ZenML dashboard is running:[/dim]")
+        console.print(f"[dim]uv run zenml up --port 8871[/dim]")
+        console.print(f"[dim]Or view runs via: zem dashboard[/dim]") # Future proofing hint
+        
+    except Exception as e:
+        console.print(f"\n[bold red]Pipeline Failed:[/bold red] {e}")
+        if os.path.exists("/tmp/zenml_error.log"):
+            console.print("\n[bold yellow]Error log snippet (/tmp/zenml_error.log):[/bold yellow]")
+            with open("/tmp/zenml_error.log", "r") as f:
+                console.print(f.read())
 
 
 if __name__ == "__main__":
     main()
+
