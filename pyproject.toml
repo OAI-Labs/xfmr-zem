@@ -20,7 +20,10 @@ dependencies = [
     "fastmcp>=0.1.0",
     "mcp>=0.1.0",
     "zenml[local,server]>=0.75.0",
-    "pyarrow>=23.0.0",
+    "pyarrow>=15.0.0",
+    "nemo-curator>=1.0.0",
+    "dask-cuda>=24.0.0",
+    "ftfy>=6.3.1",
 ]
 
 [project.optional-dependencies]
@@ -59,8 +62,8 @@ packages = ["src/xfmr_zem"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py312"
 
 [tool.black]
 line-length = 100
-target-version = ["py310"]
+target-version = ["py312"]
