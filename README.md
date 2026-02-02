@@ -1,11 +1,11 @@
-# 🚀 xfmr-zem
+# 🚀 Zem
 
 [![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](https://github.com/OAI-Labs/xfmr-zem/releases)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE)
 [![ZenML](https://img.shields.io/badge/Orchestration-ZenML-blueviolet)](https://zenml.io)
 [![MCP](https://img.shields.io/badge/Interface-MCP-orange)](https://modelcontextprotocol.io)
 
-**xfmr-zem** is a high-performance, unified data pipeline framework designed for the modern AI era. It seamlessly bridges **ZenML's** production-grade orchestration with specialized curation powerhouses like **NVIDIA NeMo Curator** and **Alibaba Data-Juicer** using the **Model Context Protocol (MCP)**.
+**Zem** is a high-performance, unified data pipeline framework designed for the modern AI era. It seamlessly bridges **ZenML's** production-grade orchestration with specialized curation powerhouses like **NVIDIA NeMo Curator** and **Alibaba Data-Juicer** using the **Model Context Protocol (MCP)**.
 
 ---
 
