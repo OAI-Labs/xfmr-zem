@@ -1,6 +1,6 @@
 [project]
 name = "xfmr-zem"
-version = "0.2.0"
+version = "0.2.1"
 description = "Zem: Unified Data Pipeline Framework (ZenML + NeMo Curator + DataJuicer) for multi-domain processing"
 readme = "README.md"
 requires-python = ">=3.10,<3.13"
@@ -26,6 +26,12 @@ dependencies = [
     "ftfy>=6.3.1",
     "pydantic>=2.0.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/OAI-Labs/xfmr-zem"
+Repository = "https://github.com/OAI-Labs/xfmr-zem"
+Issues = "https://github.com/OAI-Labs/xfmr-zem/issues"
+Changelog = "https://github.com/OAI-Labs/xfmr-zem/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 zenml = [
