@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.3] - 2026-02-02
+
+### Added
+- **GitHub Release Integration**: automated creation of formal GitHub Releases with binary assets.
+
 ## [0.2.2] - 2026-02-02
 
 ### Added
