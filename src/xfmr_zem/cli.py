@@ -296,6 +296,18 @@ def preview(artifact_id, id2, limit, sample):
         console.print(f"[bold red]Error previewing artifact:[/bold red] {e}")
 
 
+@main.group()
+def ocr():
+    """OCR related commands (Installation, etc.)"""
+    pass
+
+@ocr.command(name="install")
+def ocr_install():
+    """Install OCR model weights (ONNX/PTH)"""
+    from xfmr_zem.servers.ocr.install_models import main as install_main
+    install_main()
+
+
 if __name__ == "__main__":
     main()
 
