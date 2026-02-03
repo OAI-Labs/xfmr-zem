@@ -43,6 +43,7 @@ def extract_pdf_pages(
             # Temporary save for engine compatibility (engines expect path)
             temp_path = os.path.join(temp_dir, f"ocr_page_{os.getpid()}_{page_num}.png")
             img.save(temp_path)
+            logger.debug(f"Saved temporary page image to: {temp_path}")
             
             try:
                 ocr_result = ocr_engine.process(temp_path)

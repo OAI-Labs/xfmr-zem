@@ -20,3 +20,6 @@ pipeline:
       scanned_threshold: 100
       zoom: 3.0
     cache: false
+
+parameters:
+  ocr.temp_dir: /mnt/shared-Disk3/xfmr-labs/khaihoang/tmp
