@@ -3,6 +3,7 @@ from typing import Any, Callable, Dict, List, Optional, Union
 import yaml
 from pathlib import Path
 from fastmcp import FastMCP
+from loguru import logger
 import inspect
 import functools
 
@@ -44,7 +45,7 @@ class ZemServer(FastMCP):
                 if isinstance(env_params, dict):
                     self._merge_parameters(env_params)
             except Exception as e:
-                print(f"Error loading ZEM_PARAMETERS: {e}")
+                logger.error(f"Error loading ZEM_PARAMETERS: {e}")
 
     def load_parameters(self, file_path: str) -> Dict[str, Any]:
         """Load parameters from YAML file and merge them."""

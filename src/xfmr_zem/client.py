@@ -219,7 +219,7 @@ class PipelineClient:
                                     del tool_args[k]
                                 else:
                                     # Limitation: ZenML doesn't materialize artifacts nested in dicts
-                                    print(f"[Warning] Tool argument '{k}' uses a step reference '{v}'. "
+                                    logger.warning(f" Tool argument '{k}' uses a step reference '{v}'. "
                                           "Currently, only the 'data' field supports cross-step dependencies. "
                                           "This value will be passed as a raw string.")
                             else:

@@ -3,6 +3,7 @@ from typing import Any, Dict, Optional, List
 from zenml import step
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
+from loguru import logger
 import json
 import os
 
@@ -122,7 +123,7 @@ def list_mcp_tools(
         result = run_mcp_tool(command, args, env, "tools/list", {})
         return result.get("tools", [])
     except Exception as e:
-        print(f"Error listing tools: {e}")
+        logger.error(f"Error listing tools: {e}")
         return []
 
 
@@ -162,7 +163,7 @@ def mcp_generic_step(
     args = server_config.get("args", [])
     env = server_config.get("env", os.environ.copy())
     
-    print(f"[{server_name}] Executing tool '{tool_name}'")
+    logger.info(f"[{server_name}] Executing tool '{tool_name}'")
     start_time = time.time()
     
     try:
@@ -172,7 +173,7 @@ def mcp_generic_step(
         }
         result_data = run_mcp_tool(command, args, env, "tools/call", params)
         execution_time = time.time() - start_time
-        print(f"[{server_name}] Tool '{tool_name}' finished in {execution_time:.2f}s")
+        logger.info(f"[{server_name}] Tool '{tool_name}' finished in {execution_time:.2f}s")
         
         output_data = {}
         
