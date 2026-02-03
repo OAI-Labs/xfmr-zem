@@ -74,12 +74,12 @@ class PaddleEngine(OCREngineBase):
             "metadata": {"avg_confidence": sum(scores)/len(scores) if scores else 0}
         }
 
-class QwenVLEngine(OCREngineBase):
+class HuggingFaceVLEngine(OCREngineBase):
     """
-    Advanced OCR using Qwen3-VL Vision Language Model (Heavy & Extremely Accurate).
+    Advanced OCR using Hugging Face Vision Language Models (e.g. Qwen2-VL, Molmo).
     """
-    def __init__(self, model_id: str = "Qwen/Qwen3-VL-8B-Instruct"):
-        self.model_id = model_id
+    def __init__(self, model_id: str = "Qwen/Qwen2-VL-2B-Instruct"):
+        self.model_id = model_id or "Qwen/Qwen2-VL-2B-Instruct"
         self.model = None
         self.processor = None
 
@@ -87,34 +87,45 @@ class QwenVLEngine(OCREngineBase):
         if self.model is None:
             try:
                 import torch
-                from transformers import Qwen2_5_VLP_ForConditionalGeneration, AutoProcessor
+                from transformers import AutoModelForVision2Seq, AutoProcessor
                 
-                logger.info(f"Loading Qwen-VL model: {self.model_id} (this may take a while)...")
+                logger.info(f"Loading Hugging Face VL model: {self.model_id} (this may take a while)...")
                 self.processor = AutoProcessor.from_pretrained(self.model_id)
-                self.model = Qwen2_5_VLP_ForConditionalGeneration.from_pretrained(
+                # Using AutoModelForVision2Seq for generality
+                self.model = AutoModelForVision2Seq.from_pretrained(
                     self.model_id, 
                     torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-                    device_map="auto"
+                    device_map="auto",
+                    trust_remote_code=True
                 )
             except ImportError:
-                logger.error("transformers/torch not installed. Required for Qwen-VL.")
+                logger.error("transformers/torch not installed. Required for HuggingFace-VL.")
+                raise
+            except Exception as e:
+                logger.error(f"Error loading model {self.model_id}: {e}")
                 raise
 
     def process(self, image_path: str) -> Dict[str, Any]:
         self._lazy_load()
-        logger.info(f"Using Qwen-VL to process: {image_path}")
+        logger.info(f"Using {self.model_id} via HuggingFaceVLEngine to process: {image_path}")
         
         image = Image.open(image_path).convert("RGB")
+        
+        # Generic prompt for OCR
         prompt = "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|vision_end|>Extract all text from this image exactly as it appears.<|im_end|>\n<|im_start|>assistant\n"
         
-        # Simplified inference logic for example
+        # Note: Inference logic might vary slightly between models, but we use a common VLM pattern
         inputs = self.processor(text=[prompt], images=[image], return_tensors="pt").to(self.model.device)
         generated_ids = self.model.generate(**inputs, max_new_tokens=512)
         text = self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
         
+        # Clean up text if it contains the prompt
+        if "assistant\n" in text:
+            text = text.split("assistant\n")[-1]
+            
         return {
             "text": text,
-            "engine": "qwen_vl",
+            "engine": "huggingface",
             "metadata": {"model_id": self.model_id}
         }
 
@@ -167,13 +178,13 @@ class OCREngineFactory:
     Factory to create OCR engines (Switching strategy).
     """
     @staticmethod
-    def get_engine(engine_type: str) -> OCREngineBase:
+    def get_engine(engine_type: str, **kwargs) -> OCREngineBase:
         if engine_type == "tesseract":
             return TesseractEngine()
         elif engine_type == "paddle":
             return PaddleEngine()
-        elif engine_type == "qwen":
-            return QwenVLEngine()
+        elif engine_type == "huggingface" or engine_type == "qwen":
+            return HuggingFaceVLEngine(model_id=kwargs.get("model_id"))
         elif engine_type == "viet":
             return VietOCREngine()
         else:

@@ -7,19 +7,20 @@ from loguru import logger
 mcp = FastMCP("ocr")
 
 @mcp.tool()
-async def extract_text(file_path: str, engine: str = "tesseract") -> pd.DataFrame:
+async def extract_text(file_path: str, engine: str = "tesseract", model_id: str = None) -> pd.DataFrame:
     """
     Extracts text from an image using the specified OCR engine.
     
     Args:
         file_path: Path to the image file.
-        engine: The OCR engine to use ("tesseract", "paddle", "qwen"). Defaults to "tesseract".
+        engine: The OCR engine to use ("tesseract", "paddle", "huggingface", "viet"). Defaults to "tesseract".
+        model_id: Optional model ID for the 'huggingface' engine (e.g., "Qwen/Qwen2-VL-2B-Instruct").
     """
-    logger.info(f"OCR Extraction: {file_path} using {engine}")
+    logger.info(f"OCR Extraction: {file_path} using {engine} (model: {model_id})")
     
     try:
         # Get engine from factory (SOLID Strategy Pattern)
-        ocr_engine = OCREngineFactory.get_engine(engine)
+        ocr_engine = OCREngineFactory.get_engine(engine, model_id=model_id)
         
         # Process image
         result = ocr_engine.process(file_path)
