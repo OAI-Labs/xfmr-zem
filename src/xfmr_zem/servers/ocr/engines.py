@@ -18,10 +18,12 @@ class TesseractEngine(OCREngineBase):
     Lightweight OCR using Tesseract (Fast & Simple).
     """
     def __init__(self):
+        logger.debug("TesseractEngine: Initializing...")
         try:
             import pytesseract
             import shutil
             
+            logger.debug("TesseractEngine: Checking for tesseract binary...")
             # Check if tesseract binary exists
             if not shutil.which("tesseract"):
                 raise RuntimeError(
@@ -30,6 +32,7 @@ class TesseractEngine(OCREngineBase):
                 )
             
             self.pytesseract = pytesseract
+            logger.debug("TesseractEngine: Initialization complete")
         except ImportError:
             logger.error("pytesseract not installed. Please install with 'pip install pytesseract'")
             raise
@@ -49,9 +52,13 @@ class PaddleEngine(OCREngineBase):
     Medium-weight OCR using PaddleOCR (High accuracy for multi-language).
     """
     def __init__(self):
+        logger.debug("PaddleEngine: Initializing...")
         try:
+            logger.debug("PaddleEngine: Importing PaddleOCR...")
             from paddleocr import PaddleOCR
+            logger.debug("PaddleEngine: Creating PaddleOCR instance (use_angle_cls=True, lang='en')...")
             self.ocr = PaddleOCR(use_angle_cls=True, lang='en') # Default to English
+            logger.debug("PaddleEngine: Initialization complete")
         except ImportError:
             logger.error("paddleocr not installed. Please install with 'pip install paddleocr paddlepaddle'")
             raise
@@ -86,18 +93,26 @@ class HuggingFaceVLEngine(OCREngineBase):
     def _lazy_load(self):
         if self.model is None:
             try:
+                logger.debug(f"HuggingFaceVLEngine: Starting lazy load for model: {self.model_id}")
                 import torch
+                logger.debug(f"HuggingFaceVLEngine: PyTorch version={torch.__version__}, CUDA available={torch.cuda.is_available()}")
                 from transformers import AutoModelForVision2Seq, AutoProcessor
                 
                 logger.info(f"Loading Hugging Face VL model: {self.model_id} (this may take a while)...")
+                logger.debug(f"HuggingFaceVLEngine: Loading processor from {self.model_id}...")
                 self.processor = AutoProcessor.from_pretrained(self.model_id)
+                logger.debug(f"HuggingFaceVLEngine: Processor loaded successfully")
+                
+                dtype = torch.float16 if torch.cuda.is_available() else torch.float32
+                logger.debug(f"HuggingFaceVLEngine: Loading model with dtype={dtype}, device_map='auto'...")
                 # Using AutoModelForVision2Seq for generality
                 self.model = AutoModelForVision2Seq.from_pretrained(
                     self.model_id, 
-                    torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
+                    torch_dtype=dtype,
                     device_map="auto",
                     trust_remote_code=True
                 )
+                logger.debug(f"HuggingFaceVLEngine: Model loaded successfully, device={self.model.device}")
             except ImportError:
                 logger.error("transformers/torch not installed. Required for HuggingFace-VL.")
                 raise
@@ -134,7 +149,9 @@ class VietOCREngine(OCREngineBase):
     Specialized Vietnamese OCR using built-in Deep-ocr DocumentPipeline (Layout + OCR + MD).
     """
     def __init__(self):
+        logger.debug("VietOCREngine: Initializing...")
         try:
+            logger.debug("VietOCREngine: Importing DocumentPipeline and components...")
             from xfmr_zem.servers.ocr.deepdoc_vietocr.pipeline import DocumentPipeline
             from xfmr_zem.servers.ocr.deepdoc_vietocr.implementations import (
                 PaddleStructureV3Analyzer,
@@ -145,13 +162,26 @@ class VietOCREngine(OCREngineBase):
             )
             
             logger.info("Initializing Internal Deep-ocr DocumentPipeline for Vietnamese...")
+            logger.debug("VietOCREngine: Creating PaddleStructureV3Analyzer...")
+            layout_analyzer = PaddleStructureV3Analyzer()
+            logger.debug("VietOCREngine: Creating PaddleOCRTextDetector...")
+            text_detector = PaddleOCRTextDetector()
+            logger.debug("VietOCREngine: Creating VietOCRRecognizer...")
+            text_recognizer = VietOCRRecognizer()
+            logger.debug("VietOCREngine: Creating VietnameseTextPostProcessor...")
+            post_processor = VietnameseTextPostProcessor()
+            logger.debug("VietOCREngine: Creating SmartMarkdownReconstruction...")
+            reconstructor = SmartMarkdownReconstruction()
+            
+            logger.debug("VietOCREngine: Assembling DocumentPipeline...")
             self.pipeline = DocumentPipeline(
-                layout_analyzer=PaddleStructureV3Analyzer(),
-                text_detector=PaddleOCRTextDetector(),
-                text_recognizer=VietOCRRecognizer(),
-                post_processor=VietnameseTextPostProcessor(),
-                reconstructor=SmartMarkdownReconstruction()
+                layout_analyzer=layout_analyzer,
+                text_detector=text_detector,
+                text_recognizer=text_recognizer,
+                post_processor=post_processor,
+                reconstructor=reconstructor
             )
+            logger.debug("VietOCREngine: Initialization complete")
         except Exception as e:
             logger.error(f"Error loading internal Deep-ocr components: {e}")
             import traceback
