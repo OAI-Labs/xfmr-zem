@@ -9,5 +9,9 @@ pipeline:
   - name: viet_ocr_test
     ocr.extract_text:
       file_path: "data/vietnamese_ocr.png"
-      engine: "viet"
     cache: false
+
+parameters:
+  ocr:
+    engine: "huggingface"
+    model_id: "5CD-AI/Vintern-1B-v2"

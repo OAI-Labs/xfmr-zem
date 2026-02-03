@@ -1,13 +1,13 @@
 import pandas as pd
-from fastmcp import FastMCP
+from xfmr_zem.server import ZemServer
 from xfmr_zem.servers.ocr.engines import OCREngineFactory
 from loguru import logger
 
-# Initialize FastMCP for OCR
-mcp = FastMCP("ocr")
+# Initialize ZemServer for OCR
+mcp = ZemServer("ocr")
 
 @mcp.tool()
-async def extract_text(file_path: str, engine: str = "tesseract", model_id: str = None) -> pd.DataFrame:
+async def extract_text(file_path: str, engine: str = None, model_id: str = None) -> pd.DataFrame:
     """
     Extracts text from an image using the specified OCR engine.
     

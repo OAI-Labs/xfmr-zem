@@ -39,6 +39,17 @@ class PipelineClient:
                     params.update(yaml.safe_load(f) or {})
         return params
 
+    def _flatten_params(self, d: Dict[str, Any], prefix: str = "") -> Dict[str, Any]:
+        """Flatten nested dictionary into dot-notation keys."""
+        items = []
+        for k, v in d.items():
+            new_key = f"{prefix}.{k}" if prefix else k
+            if isinstance(v, dict):
+                items.extend(self._flatten_params(v, new_key).items())
+            else:
+                items.append((new_key, v))
+        return dict(items)
+
     def _load_config_dict(self, path: Path) -> Dict[str, Any]:
         """Load YAML config and perform substitution."""
         with open(path, "r") as f:
@@ -54,8 +65,13 @@ class PipelineClient:
             custom_params = self._load_params(self.params_path)
             self.params.update(custom_params)
             
+        # Flatten params for template substitution
+        flat_params = self._flatten_params(self.params)
+        
         content = raw_content
-        for key, value in self.params.items():
+        # Use reversed sorted keys to avoid partial replacements (e.g. ocr before ocr.engine)
+        for key in sorted(flat_params.keys(), key=len, reverse=True):
+            value = flat_params[key]
             content = content.replace(f"{{{{ {key} }}}}", str(value))
             content = content.replace(f"{{{{{key}}}}}", str(value))
             
@@ -157,6 +173,23 @@ class PipelineClient:
                             tool_args = {k: v for k, v in val.items() if k != "name"}
                     else:
                         tool_args = {}
+                    
+                # Standardized Parameter Injection: 
+                # Merge parameters from the 'parameters' section.
+                # Priority: Step-specific args > parameters.<srv>.<tool> > parameters.<srv>
+                srv_params = self.params.get(srv, {})
+                if isinstance(srv_params, dict):
+                    # 1. Server-wide defaults
+                    for k, v in srv_params.items():
+                        if k != tool and not isinstance(v, dict) and k not in tool_args:
+                            tool_args[k] = v
+                    
+                    # 2. Tool-specific overrides
+                    tool_params = srv_params.get(tool, {})
+                    if isinstance(tool_params, dict):
+                        for k, v in tool_params.items():
+                            if k not in tool_args:
+                                tool_args[k] = v
                      
 
                 # Smart Parallelization & DAG Logic:
