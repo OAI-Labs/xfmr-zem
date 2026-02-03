@@ -146,11 +146,18 @@ class PipelineClient:
                         
                     srv, tool = key.split(".")
                     
-                    if not step_alias:
-                        step_alias = step_def[key].get("name")
-                    
                     step_alias = step_alias or f"{srv}.{tool}.{i}"
-                    tool_args = step_def[key].get("input", {}) or {}
+                    
+                    val = step_def[key]
+                    if isinstance(val, dict):
+                        if "input" in val:
+                            tool_args = val.get("input", {}) or {}
+                        else:
+                            # Use everything except 'name' as tool_args
+                            tool_args = {k: v for k, v in val.items() if k != "name"}
+                    else:
+                        tool_args = {}
+                     
 
                 # Smart Parallelization & DAG Logic:
                 # 1. By default, a step is a root (None) unless it has no 'data' input,
@@ -161,8 +168,13 @@ class PipelineClient:
                 has_explicit_data = "data" in tool_args
 
                 if not has_explicit_data:
-                    # No data provided? Inherit from the last executed step to keep simple sequences working
-                    current_prev_output = last_output
+                    # Smart Source Detection: If a step has 'file_path', 'url', etc.,
+                    # it's likely a primary ingestion step and shouldn't inherit 'data' from the previous step.
+                    source_keys = {"file_path", "url", "uri", "path"}
+                    is_source = any(k in tool_args for k in source_keys)
+                    
+                    if not is_source:
+                        current_prev_output = last_output
                 else:
                     # Data provided? Check if it's a reference or raw data
                     for k, v in list(tool_args.items()):

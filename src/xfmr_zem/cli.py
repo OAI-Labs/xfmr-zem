@@ -239,12 +239,18 @@ def preview(artifact_id, id2, limit, sample):
                 return pd.DataFrame(lines)
         elif isinstance(d, list): return pd.DataFrame(d)
         elif isinstance(d, pd.DataFrame): return d
-        return None
+        elif isinstance(d, dict): return pd.DataFrame([d])
+        return d
 
     try:
         df1 = load_art_df(artifact_id)
         if df1 is None:
-            console.print("[bold red]Error:[/bold red] Could not load artifact as tabular data.")
+            console.print("[bold red]Error:[/bold red] Artifact is empty or could not be loaded.")
+            return
+
+        if not isinstance(df1, pd.DataFrame):
+            console.print(f"[bold blue]Artifact Preview (Type: {type(df1).__name__}):[/bold blue]")
+            console.print(str(df1))
             return
 
         if id2:

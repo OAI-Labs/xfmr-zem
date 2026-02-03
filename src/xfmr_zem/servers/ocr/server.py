@@ -1,0 +1,43 @@
+import pandas as pd
+from fastmcp import FastMCP
+from xfmr_zem.servers.ocr.engines import OCREngineFactory
+from loguru import logger
+
+# Initialize FastMCP for OCR
+mcp = FastMCP("ocr")
+
+@mcp.tool()
+async def extract_text(file_path: str, engine: str = "tesseract") -> pd.DataFrame:
+    """
+    Extracts text from an image using the specified OCR engine.
+    
+    Args:
+        file_path: Path to the image file.
+        engine: The OCR engine to use ("tesseract", "paddle", "qwen"). Defaults to "tesseract".
+    """
+    logger.info(f"OCR Extraction: {file_path} using {engine}")
+    
+    try:
+        # Get engine from factory (SOLID Strategy Pattern)
+        ocr_engine = OCREngineFactory.get_engine(engine)
+        
+        # Process image
+        result = ocr_engine.process(file_path)
+        
+        # Structure as a single-row DataFrame for Zem compatibility
+        # We wrap in a list to ensure pandas creates a row
+        df = pd.DataFrame([{
+            "text": result["text"],
+            "engine": result["engine"],
+            "metadata": result["metadata"]
+        }])
+        
+        logger.info(f"Successfully extracted text using {engine}")
+        return df.to_dict(orient="records")
+        
+    except Exception as e:
+        logger.error(f"OCR Error with {engine}: {e}")
+        raise RuntimeError(f"OCR failed: {str(e)}")
+
+if __name__ == "__main__":
+    mcp.run()
