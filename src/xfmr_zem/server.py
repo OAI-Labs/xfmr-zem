@@ -4,6 +4,7 @@ import yaml
 from pathlib import Path
 from fastmcp import FastMCP
 import inspect
+import functools
 
 class ZemServer(FastMCP):
     """
@@ -22,9 +23,17 @@ class ZemServer(FastMCP):
         self.parameter_file = parameter_file
         self.parameters = {}
         
-        # 1. Load from file
+        # 1. Load from file or auto-detect in server directory
         if parameter_file:
             self.load_parameters(parameter_file)
+        else:
+            # Auto-detect parameters.yml in the same directory as the server script
+            import inspect
+            caller_frame = inspect.stack()[1]
+            caller_file = caller_frame.filename
+            auto_path = Path(caller_file).parent / "parameters.yml"
+            if auto_path.exists():
+                self.load_parameters(str(auto_path))
             
         # 2. Override with env params (from PipelineClient)
         import os
@@ -79,8 +88,44 @@ class ZemServer(FastMCP):
             else:
                 target[k] = v
 
-    # Removed custom tool decorator to fix multiple values for argument 'name' error
-    # Inherit directly from FastMCP.tool
+    def tool(self, name: Optional[str] = None, description: Optional[str] = None):
+        """
+        Custom tool decorator that automatically injects parameters from self.parameters.
+        """
+        def decorator(func: Callable):
+            sig = inspect.signature(func)
+            tn = name or func.__name__
+
+            @functools.wraps(func)
+            async def wrapper(*args, **kwargs):
+                # 1. Get params for this tool
+                tool_params = self.parameters.get(tn, {})
+                if not isinstance(tool_params, dict):
+                    tool_params = {}
+
+                # 2. Map positional args to names to check if they are already provided
+                bound_args = sig.bind_partial(*args, **kwargs)
+                
+                # 3. Fill missing arguments from tool_params
+                for p_name, p_obj in sig.parameters.items():
+                    if p_name not in bound_args.arguments or bound_args.arguments[p_name] is None:
+                        if p_name in tool_params:
+                            kwargs[p_name] = tool_params[p_name]
+                        elif p_obj.default is not inspect.Parameter.empty:
+                            # Already has a default in signature, but if explicitly None, maybe override?
+                            # For now, if it's None and in tool_params, we override.
+                            pass
+
+                if inspect.iscoroutinefunction(func):
+                    return await func(*args, **kwargs)
+                else:
+                    return func(*args, **kwargs)
+
+            # Ensure FastMCP sees the original signature for schema generation
+            wrapper.__signature__ = sig
+            return super().tool(name=name, description=description)(wrapper)
+
+        return decorator
 
     def get_data(self, data: Any) -> List[Dict[str, Any]]:
         """
