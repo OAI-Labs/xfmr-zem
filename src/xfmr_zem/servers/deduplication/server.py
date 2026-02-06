@@ -118,11 +118,21 @@ def get_ner_pipeline():
     """
     Lazy load Vietnamese NER pipeline.
     Uses NlpHUST/ner-vietnamese-electra-base model.
+    Auto-detects GPU if available.
     """
     global _ner_pipeline
     if _ner_pipeline is None:
         try:
             from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline
+            import torch
+            
+            # Auto-detect GPU
+            if torch.cuda.is_available():
+                device = 0  # Use first GPU
+                logger.info(f"GPU detected: {torch.cuda.get_device_name(0)}")
+            else:
+                device = -1  # CPU
+                logger.info("No GPU detected, using CPU")
             
             logger.info("Loading Vietnamese NER model (NlpHUST/ner-vietnamese-electra-base)...")
             tokenizer = AutoTokenizer.from_pretrained("NlpHUST/ner-vietnamese-electra-base")
@@ -132,9 +142,9 @@ def get_ner_pipeline():
                 model=model, 
                 tokenizer=tokenizer, 
                 aggregation_strategy="simple",
-                device=-1  # CPU, use 0 for GPU
+                device=device
             )
-            logger.info("Vietnamese NER model loaded successfully")
+            logger.info(f"Vietnamese NER model loaded successfully (device={'GPU' if device >= 0 else 'CPU'})")
         except Exception as e:
             logger.warning(f"Failed to load NER model: {e}. Falling back to regex-based extraction.")
             _ner_pipeline = None
