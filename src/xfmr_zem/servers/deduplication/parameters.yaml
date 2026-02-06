@@ -1,0 +1,49 @@
+# Default parameters for Deduplication Server
+minhash_dedup:
+  threshold: 0.9
+  num_perm: 128
+  shingle_size: 5
+  shingle_type: "char"
+  use_vi_tokenizer: false
+  normalize_diacritics: true
+  text_column: "markdown_content"
+  id_column: null
+  keep: "first"
+  return_duplicates: false
+
+entity_aware_dedup:
+  threshold: 0.9
+  num_perm: 128
+  shingle_size: 5
+  shingle_type: "char"
+  normalize_diacritics: true
+  text_column: "markdown_content"
+  id_column: "document_number"
+  keep: "first"
+  return_analysis: false
+
+compute_minhash_signatures:
+  num_perm: 128
+  shingle_size: 5
+  shingle_type: "char"
+  use_vi_tokenizer: false
+  text_column: "text"
+  id_column: null
+
+find_similar_documents:
+  top_k: 10
+  threshold: 0.5
+  num_perm: 128
+  shingle_size: 5
+  shingle_type: "char"
+  use_vi_tokenizer: false
+  text_column: "text"
+
+cluster_duplicates:
+  threshold: 0.8
+  num_perm: 128
+  shingle_size: 5
+  shingle_type: "char"
+  use_vi_tokenizer: false
+  text_column: "text"
+  id_column: null

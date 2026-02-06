@@ -899,6 +899,20 @@ wheels = [
 ]
 
 [[package]]
+name = "datasketch"
+version = "1.9.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "scipy", version = "1.17.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/1f/d1/0b64dbc7626be277413daff298b9f026911389e75562952d5b7c662bbea1/datasketch-1.9.0.tar.gz", hash = "sha256:78d4560e415b0de11f595165887a0e4c9983d07b8f15dce9c53289a86bc12e92", size = 89790, upload-time = "2026-01-18T22:46:46.039Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fb/c8/ef06f4c9a0d7697c14c39475eaccd7d3774c34ecc693691079a21bd0d1f1/datasketch-1.9.0-py3-none-any.whl", hash = "sha256:48c18ae889862793609971c6d6d392d71c86793e838dbddd8aa53af6b1716e8a", size = 96542, upload-time = "2026-01-18T22:46:44.368Z" },
+]
+
+[[package]]
 name = "decorator"
 version = "5.2.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1079,6 +1093,28 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/50/79/66800aadf48771f6b62f7eb014e352e5d06856655206165d775e675a02c9/exceptiongroup-1.3.1.tar.gz", hash = "sha256:8b412432c6055b0b7d14c310000ae93352ed6754f70fa8f7c34141f91c4e3219", size = 30371, upload-time = "2025-11-21T23:01:54.787Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/8a/0e/97c33bf5009bdbac74fd2beace167cab3f978feb69cc36f1ef79360d6c4e/exceptiongroup-1.3.1-py3-none-any.whl", hash = "sha256:a7a39a3bd276781e98394987d3a5701d0c4edffb633bb7a5144577f82c773598", size = 16740, upload-time = "2025-11-21T23:01:53.443Z" },
+]
+
+[[package]]
+name = "faiss-cpu"
+version = "1.13.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+    { name = "packaging" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/07/c9/671f66f6b31ec48e5825d36435f0cb91189fa8bb6b50724029dbff4ca83c/faiss_cpu-1.13.2-cp310-abi3-macosx_14_0_arm64.whl", hash = "sha256:a9064eb34f8f64438dd5b95c8f03a780b1a3f0b99c46eeacb1f0b5d15fc02dc1", size = 3452776, upload-time = "2025-12-24T10:27:01.419Z" },
+    { url = "https://files.pythonhosted.org/packages/5a/4a/97150aa1582fb9c2bca95bd8fc37f27d3b470acec6f0a6833844b21e4b40/faiss_cpu-1.13.2-cp310-abi3-macosx_14_0_x86_64.whl", hash = "sha256:c8d097884521e1ecaea6467aeebbf1aa56ee4a36350b48b2ca6b39366565c317", size = 7896434, upload-time = "2025-12-24T10:27:03.592Z" },
+    { url = "https://files.pythonhosted.org/packages/0b/d0/0940575f059591ca31b63a881058adb16a387020af1709dcb7669460115c/faiss_cpu-1.13.2-cp310-abi3-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl", hash = "sha256:0ee330a284042c2480f2e90450a10378fd95655d62220159b1408f59ee83ebf1", size = 11485825, upload-time = "2025-12-24T10:27:05.681Z" },
+    { url = "https://files.pythonhosted.org/packages/e7/e1/a5acac02aa593809f0123539afe7b4aff61d1db149e7093239888c9053e1/faiss_cpu-1.13.2-cp310-abi3-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:ab88ee287c25a119213153d033f7dd64c3ccec466ace267395872f554b648cd7", size = 23845772, upload-time = "2025-12-24T10:27:08.194Z" },
+    { url = "https://files.pythonhosted.org/packages/9c/7b/49dcaf354834ec457e85ca769d50bc9b5f3003fab7c94a9dcf08cf742793/faiss_cpu-1.13.2-cp310-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:85511129b34f890d19c98b82a0cd5ffb27d89d1cec2ee41d2621ee9f9ef8cf3f", size = 13477567, upload-time = "2025-12-24T10:27:10.822Z" },
+    { url = "https://files.pythonhosted.org/packages/f7/6b/12bb4037921c38bb2c0b4cfc213ca7e04bbbebbfea89b0b5746248ce446e/faiss_cpu-1.13.2-cp310-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:8b32eb4065bac352b52a9f5ae07223567fab0a976c7d05017c01c45a1c24264f", size = 25102239, upload-time = "2025-12-24T10:27:13.476Z" },
+    { url = "https://files.pythonhosted.org/packages/be/3a/c215083d883173871f9b76719ca7696d832fc5255fb82358b0b25dd1d1af/faiss_cpu-1.13.2-cp310-cp310-win_amd64.whl", hash = "sha256:eb8bf5dd96465d043c22195afbe8276d5197b710704290d9b454144a0ad892ed", size = 18879081, upload-time = "2025-12-24T10:27:15.859Z" },
+    { url = "https://files.pythonhosted.org/packages/14/6d/40439a05e4e60a0e889aa68b08ec70f5c8e32901f75f2be25c593a2e050e/faiss_cpu-1.13.2-cp311-cp311-win_amd64.whl", hash = "sha256:7c5944d7807d58fe7244b6aba06be710ee7ed99343365ed92699349efe979f51", size = 18879906, upload-time = "2025-12-24T10:27:19.041Z" },
+    { url = "https://files.pythonhosted.org/packages/9f/f9/b97eadbdd9e00f945d1566c7101382344f504596bfb19219465b0fc61e6e/faiss_cpu-1.13.2-cp311-cp311-win_arm64.whl", hash = "sha256:19508a1badfb36e456c1c8664eeb948349f604db5c7545f277a0126b4a84b080", size = 8548280, upload-time = "2025-12-24T10:27:22.114Z" },
+    { url = "https://files.pythonhosted.org/packages/87/ff/35ed875423200c17bdd594ce921abfc1812ddd21e09355290b9a94e170ab/faiss_cpu-1.13.2-cp312-cp312-win_amd64.whl", hash = "sha256:b82c01d30430dd7b1fa442001b9099735d1a82f6bb72033acdc9206d5ac66a64", size = 18890300, upload-time = "2025-12-24T10:27:24.194Z" },
+    { url = "https://files.pythonhosted.org/packages/c5/3a/bbdf5deaf6feb34b46b469c0a0acd40216c3d3c6ecf5aeb71d56b8a650e3/faiss_cpu-1.13.2-cp312-cp312-win_arm64.whl", hash = "sha256:2c4f696ae76e7c97cbc12311db83aaf1e7f4f7be06a3ffea7e5b0e8ec1fd805b", size = 8553157, upload-time = "2025-12-24T10:27:26.38Z" },
 ]
 
 [[package]]
@@ -4704,6 +4740,27 @@ wheels = [
 ]
 
 [[package]]
+name = "sentence-transformers"
+version = "5.2.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "huggingface-hub" },
+    { name = "numpy" },
+    { name = "scikit-learn", version = "1.7.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "scikit-learn", version = "1.8.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "scipy", version = "1.15.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "scipy", version = "1.17.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "torch" },
+    { name = "tqdm" },
+    { name = "transformers" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a6/bc/0bc9c0ec1cf83ab2ec6e6f38667d167349b950fff6dd2086b79bd360eeca/sentence_transformers-5.2.2.tar.gz", hash = "sha256:7033ee0a24bc04c664fd490abf2ef194d387b3a58a97adcc528783ff505159fa", size = 381607, upload-time = "2026-01-27T11:11:02.658Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/cc/21/7e925890636791386e81b52878134f114d63072e79fffe14cdcc5e7a5e6a/sentence_transformers-5.2.2-py3-none-any.whl", hash = "sha256:280ac54bffb84c110726b4d8848ba7b7c60813b9034547f8aea6e9a345cd1c23", size = 494106, upload-time = "2026-01-27T11:11:00.983Z" },
+]
+
+[[package]]
 name = "setuptools"
 version = "80.10.2"
 source = { registry = "https://pypi.org/simple" }
@@ -5412,6 +5469,55 @@ wheels = [
 ]
 
 [[package]]
+name = "underthesea"
+version = "9.2.9"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+    { name = "huggingface-hub" },
+    { name = "joblib" },
+    { name = "pyyaml" },
+    { name = "requests" },
+    { name = "scikit-learn", version = "1.7.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "scikit-learn", version = "1.8.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "tqdm" },
+    { name = "underthesea-core" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/aa/1b/85dc2a2ddb4ae39094dcd710443dd235b8bf6b6f1e91e1894c4140a3bec4/underthesea-9.2.9.tar.gz", hash = "sha256:c858c628add734b0f04f53d914e8bc38bcb131e514c964c53fa4c1d785dcb771", size = 7004513, upload-time = "2026-02-03T01:49:55.322Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/90/37/66d45f97072f3927e6cafaf0c09b3c9282ba06efc2a46bf65a393a7b8296/underthesea-9.2.9-py3-none-any.whl", hash = "sha256:1bd0f6cc5a0db14e11fdb2c1dd1a93c2b606a449bed9100ec69716821ca293a8", size = 7042199, upload-time = "2026-02-03T01:49:53.292Z" },
+]
+
+[[package]]
+name = "underthesea-core"
+version = "3.1.7"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/70/4f/d11dcbb90af11b1432c15475d7366b47b17cd8596191be44ea7c66325c0e/underthesea_core-3.1.7.tar.gz", hash = "sha256:34f4c09d256fcb81fc57dcd42ee85dcd2f58c44e8e6e1d7ef938119a03b70139", size = 669431, upload-time = "2026-02-03T01:34:36.814Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1d/3a/71a04cd8a3d8b8861e4cc9a5369541a478de4244b6330c27a56e652ad383/underthesea_core-3.1.7-cp310-cp310-macosx_10_12_x86_64.whl", hash = "sha256:a50633dd742785062522fb9a58c69bb3fec46e5ea25d5dc39d6c743af9d846b9", size = 1271987, upload-time = "2026-02-03T01:33:47.197Z" },
+    { url = "https://files.pythonhosted.org/packages/37/98/54f12d7426f5afc5f3f0794fd227b8d21d6200cd9bc9026919271c713040/underthesea_core-3.1.7-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:730063d32bad0e01fbf24fe898f14475282e6528f55a9e48128bf0d908f40695", size = 1216326, upload-time = "2026-02-03T01:33:49.055Z" },
+    { url = "https://files.pythonhosted.org/packages/e6/01/b8cc8817cd00f846337c3220f1480e5434779115e7a6b775456fb9792825/underthesea_core-3.1.7-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b6b2de92b1dbe7b63cf030b79e4c69cae4b8eab0a2e9b8ced2d2b94b0277b7f3", size = 1363797, upload-time = "2026-02-03T01:33:50.758Z" },
+    { url = "https://files.pythonhosted.org/packages/99/61/094c18e35c3878a55b874484170fe21651312a3ce4297bc3e39fdfd2893d/underthesea_core-3.1.7-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1dc5ea3500a4479cd753efb606c23078582e5372168186fe1d669d0f242c3e3a", size = 1378583, upload-time = "2026-02-03T01:33:51.864Z" },
+    { url = "https://files.pythonhosted.org/packages/e1/05/a96123d348a07eaf498bfab3fc3f18df48fe09de77cf474c24a85fb483bb/underthesea_core-3.1.7-cp310-cp310-musllinux_1_2_aarch64.whl", hash = "sha256:0b5611b3004fdb5e6cab1e4bd46b7682cd387b0cf463dc82a92956d5b2584be7", size = 1537348, upload-time = "2026-02-03T01:33:53.484Z" },
+    { url = "https://files.pythonhosted.org/packages/30/7e/a3a97a914beaf42daf5fb9e918b05821b71561492f6a331ac1b3d7cff5d0/underthesea_core-3.1.7-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:8aaf0fe247aaccead227e7a576455fad65809516b7e61f7521d1930301ea1df6", size = 1625544, upload-time = "2026-02-03T01:33:55.03Z" },
+    { url = "https://files.pythonhosted.org/packages/30/49/f798bb6013d9534ea6e97005509d4974cfe676439804511a8a1ed7f7a80d/underthesea_core-3.1.7-cp310-cp310-win_amd64.whl", hash = "sha256:b00d654c6693cb8d8c29e09768e560243878eb6bb113d14d46d67bfd0a50bfe2", size = 1088968, upload-time = "2026-02-03T01:33:56.819Z" },
+    { url = "https://files.pythonhosted.org/packages/1b/e5/8eb508d0a4056d56481203f35d76dd1eb4ff0e2945d044e6e96913c591ef/underthesea_core-3.1.7-cp311-cp311-macosx_10_12_x86_64.whl", hash = "sha256:e14c483fed9b210210c015fbb24550350e858885e77290a3ce0254fe77e3e70e", size = 1272033, upload-time = "2026-02-03T01:33:58.442Z" },
+    { url = "https://files.pythonhosted.org/packages/ff/fe/5ae00526a0fdbec5f51194445dea54db311be6b256e0f160d45a52f29da6/underthesea_core-3.1.7-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:96c06ce65a939436db38cd696ba3953a29039bb1a3a56c2331c5af0639fa0e87", size = 1216386, upload-time = "2026-02-03T01:33:59.504Z" },
+    { url = "https://files.pythonhosted.org/packages/82/eb/5c793b294616874c0fc589cffe18f800fc556da9bbe8e403913a69acbff3/underthesea_core-3.1.7-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:ebb6b16eaea1c826fae290482a91bf424df4654e4be7d18575bd886d1b043424", size = 1363598, upload-time = "2026-02-03T01:34:00.796Z" },
+    { url = "https://files.pythonhosted.org/packages/cc/40/9761feb714853f041b4cf5eeff4c67ecdb9e85e91f7d5df968b6f5f22345/underthesea_core-3.1.7-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:71e62776652315cd0534f5086401d041eba3d4b8149f00e40adde74c9c9da6de", size = 1378664, upload-time = "2026-02-03T01:34:01.941Z" },
+    { url = "https://files.pythonhosted.org/packages/d0/2a/7fc01a9734344480b70e559f640e717042f37d05411549e26a455ad12691/underthesea_core-3.1.7-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:f0d431ca52583b22d9ff902b361517a68240d34a74a7d2954cd843d6e760e507", size = 1537086, upload-time = "2026-02-03T01:34:03.231Z" },
+    { url = "https://files.pythonhosted.org/packages/56/bb/733eaae9ebbbda36c94a77fb609fb20ba6fdd498ff8df3442f45b02c8e46/underthesea_core-3.1.7-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:58fc921547bbca2217309a79eaf915fc8c45a4c4ddf4d848c8979003f2c08491", size = 1626019, upload-time = "2026-02-03T01:34:04.385Z" },
+    { url = "https://files.pythonhosted.org/packages/43/d6/42b3026620821715f54bf76b771bb031154c6c5b228d096ea735260339cd/underthesea_core-3.1.7-cp311-cp311-win_amd64.whl", hash = "sha256:6f37c86cb15a379d7804457a09d9b86b9c7b8002839b6a574bfa2f030b56d941", size = 1089008, upload-time = "2026-02-03T01:34:05.527Z" },
+    { url = "https://files.pythonhosted.org/packages/2a/33/6e0f3efc608c41db3f2cf6aa915f3a37c80fbfcb001ff5db7bc776fe0719/underthesea_core-3.1.7-cp312-cp312-macosx_10_12_x86_64.whl", hash = "sha256:98dc063af709023ef35241c7f7ae820ce80f07eca8bbbb68423e75f2c027bc6c", size = 1267029, upload-time = "2026-02-03T01:34:07.148Z" },
+    { url = "https://files.pythonhosted.org/packages/7c/4c/03a73f80d7948b98ee9ec6f9dced66471d493907cb997103450c51fe881f/underthesea_core-3.1.7-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:19c06e15b15a81b26e1934d47739474ae63911359b3404f9132156d590e8ef6d", size = 1216115, upload-time = "2026-02-03T01:34:08.453Z" },
+    { url = "https://files.pythonhosted.org/packages/bb/ab/e2446ac907ff0ebc801a0ecc814b0897d0f744375337531adc6f6d550d0e/underthesea_core-3.1.7-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:2d43806bc5c8e985b68321a58d1901d0ee9a658a2885344d22988196043c8ee8", size = 1364644, upload-time = "2026-02-03T01:34:09.575Z" },
+    { url = "https://files.pythonhosted.org/packages/89/0a/5d1da98e463b9d35b0cc342fa951eefa82763637c270af83f1102adae2ad/underthesea_core-3.1.7-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6dc64e38defd8bdbb6c91fd0f2b792cdb25a8ec7f45f68b5c5d4a28dd7ceedab", size = 1381147, upload-time = "2026-02-03T01:34:10.771Z" },
+    { url = "https://files.pythonhosted.org/packages/b2/cb/863432203027db12f760f325bb77a7cbef9f2fbf8cdeee97ac85120593da/underthesea_core-3.1.7-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:4e8a4953ed278e88129bb586288dd60e07ab7246a12ebb48fa9c8913b11d55a4", size = 1538085, upload-time = "2026-02-03T01:34:12.451Z" },
+    { url = "https://files.pythonhosted.org/packages/1a/3c/eef61e51c8b54920b21873693956e3861da8870234db7c9547bca04cc54d/underthesea_core-3.1.7-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:e05c53b1c11cc0fe81443976f7a42c46894f27bd341b4301a44f91ed2e314bf7", size = 1628610, upload-time = "2026-02-03T01:34:13.78Z" },
+    { url = "https://files.pythonhosted.org/packages/d3/8a/b5fd003582d46a1e5f29c529fe4190cab04930eb53e7572b03830fe12d25/underthesea_core-3.1.7-cp312-cp312-win_amd64.whl", hash = "sha256:b7b7d8a6e87418be2d0a790f7240ba8ea8ebd87c90e5519cbb80d694400d3318", size = 1089552, upload-time = "2026-02-03T01:34:15.529Z" },
+]
+
+[[package]]
 name = "unstructured"
 version = "0.18.31"
 source = { registry = "https://pypi.org/simple" }
@@ -5774,6 +5880,8 @@ source = { editable = "." }
 dependencies = [
     { name = "click" },
     { name = "dask-cuda" },
+    { name = "datasketch" },
+    { name = "faiss-cpu" },
     { name = "fastmcp" },
     { name = "ftfy" },
     { name = "loguru" },
@@ -5786,18 +5894,27 @@ dependencies = [
     { name = "python-magic" },
     { name = "pyyaml" },
     { name = "rich" },
+    { name = "sentence-transformers" },
+    { name = "transformers" },
+    { name = "underthesea" },
     { name = "unstructured", extra = ["all-docs"] },
     { name = "zenml", extra = ["local", "server"] },
 ]
 
 [package.optional-dependencies]
 all = [
+    { name = "datasketch" },
     { name = "nemo-curator" },
     { name = "py-data-juicer" },
+    { name = "underthesea" },
     { name = "zenml" },
 ]
 datajuicer = [
     { name = "py-data-juicer" },
+]
+deduplication = [
+    { name = "datasketch" },
+    { name = "underthesea" },
 ]
 dev = [
     { name = "black" },
@@ -5847,7 +5964,11 @@ requires-dist = [
     { name = "cachetools", marker = "extra == 'ocr'", specifier = ">=5.0.0" },
     { name = "click", specifier = ">=8.0.0" },
     { name = "dask-cuda", specifier = ">=24.0.0" },
+    { name = "datasketch", specifier = ">=1.6.0" },
+    { name = "datasketch", marker = "extra == 'all'", specifier = ">=1.6.0" },
+    { name = "datasketch", marker = "extra == 'deduplication'", specifier = ">=1.6.0" },
     { name = "einops", marker = "extra == 'ocr'" },
+    { name = "faiss-cpu", specifier = ">=1.13.2" },
     { name = "fastapi", marker = "extra == 'ui'" },
     { name = "fastmcp", specifier = ">=0.1.0" },
     { name = "ftfy", specifier = ">=6.3.1" },
@@ -5882,18 +6003,23 @@ requires-dist = [
     { name = "rich", specifier = ">=13.0.0" },
     { name = "ruamel-yaml", marker = "extra == 'ocr'", specifier = ">=0.17.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.1.0" },
+    { name = "sentence-transformers", specifier = ">=5.2.2" },
     { name = "shapely", marker = "extra == 'ocr'" },
     { name = "soundfile", marker = "extra == 'voice'" },
     { name = "torch", marker = "extra == 'ocr'", specifier = "==2.5.1" },
     { name = "torchvision", marker = "extra == 'ocr'", specifier = "==0.20.1" },
+    { name = "transformers", specifier = ">=4.55.2" },
     { name = "transformers", marker = "extra == 'ocr'", specifier = ">=4.40.0" },
+    { name = "underthesea", specifier = ">=9.2.9" },
+    { name = "underthesea", marker = "extra == 'all'", specifier = ">=6.8.0" },
+    { name = "underthesea", marker = "extra == 'deduplication'", specifier = ">=6.8.0" },
     { name = "unstructured", extras = ["all-docs"], specifier = ">=0.16.0" },
     { name = "uvicorn", marker = "extra == 'ui'" },
     { name = "zenml", marker = "extra == 'all'", specifier = ">=0.75.0" },
     { name = "zenml", marker = "extra == 'zenml'", specifier = ">=0.75.0" },
     { name = "zenml", extras = ["local", "server"], specifier = ">=0.75.0" },
 ]
-provides-extras = ["zenml", "nemo", "datajuicer", "all", "ocr", "voice", "ui", "dev"]
+provides-extras = ["zenml", "nemo", "datajuicer", "deduplication", "all", "ocr", "voice", "ui", "dev"]
 
 [[package]]
 name = "xlrd"

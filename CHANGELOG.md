@@ -1,3 +1,17 @@
+## [0.2.10] [*](https://github.com/OAI-Labs/xfmr-zem/pull/6) - 2026-02-06
+
+### Added
+- **Two-Stage Deduplication**: Implemented a high-precision pipeline combining MinHash LSH with NER-based filtering and semantic similarity detection.
+- **Advanced Similarity Tools**: Added vector-based document clustering and similarity search using FAISS and sentence embeddings.
+- **System Observability**: Introduced verbose logging and real-time subprocess output streaming for improved server troubleshooting.
+
+## [0.2.5] [*](https://github.com/OAI-Labs/xfmr-zem/pull/5) - 2026-02-05
+
+### Added
+- **Entity-Aware Deduplication**: Two-stage server using MinHash + LSH and NER-based filtering for high-precision document deduplication.
+- **Vietnamese Language Support**: Added diacritics normalization and word tokenization optimized for Vietnamese text.
+- **Similarity & Clustering Tools**: New MCP tools for document similarity, clustering, and signature computation.
+
 # Changelog
 
 All notable changes to this project will be documented in this file.

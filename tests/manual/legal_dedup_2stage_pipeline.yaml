@@ -1,0 +1,39 @@
+# Two-Stage Entity-Aware Deduplication Pipeline
+# Stage 1: MinHash LSH for candidate detection
+# Stage 2: NER-based entity comparison to filter false positives
+#
+# Data source: /mnt/shared-Disk3/xfmr-labs/shared_data/legal_data/legal_gold/tvpl_enriched.jsonl.gz
+# Schema: See legal-data-enrichment/docs/DB_schema.md
+
+name: legal_dedup_2stage_pipeline
+
+servers:
+  dedup: servers/deduplication
+
+
+
+pipeline:
+  # Run Two-Stage Dedup with Analysis
+  # Returns detailed breakdown of true duplicates vs false positives
+  - name: dedup_analysis
+    dedup.entity_aware_dedup:
+      data: "data/legal_sample_10k.jsonl"
+      threshold: 0.9
+      shingle_type: "char"
+      normalize_diacritics: true
+      text_column: "markdown_content"
+      id_column: "document_number"
+      keep: "first"
+      return_analysis: true
+    cache: false
+
+parameters:
+  dedup:
+    num_perm: 256
+    shingle_size: 5
+    shingle_type: "char"
+    normalize_diacritics: true
+    text_column: "markdown_content"
+    id_column: "document_number"
+    keep: "first"
+    return_analysis: true
