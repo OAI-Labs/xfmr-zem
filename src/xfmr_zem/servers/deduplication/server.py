@@ -402,18 +402,25 @@ class MinHashLSH:
         return text
     
     def _compute_signature_pure(self, shingles: Set[str]) -> List[int]:
-        """Compute MinHash signature using pure Python."""
+        """Compute MinHash signature using pure Python.
+        
+        Optimized: Pre-compute base MD5 hashes once, then apply permutations.
+        This reduces MD5 computations from N×P to N (N=shingles, P=permutations).
+        """
         if not shingles:
             return [0] * self.num_perm
         
+        # Pre-compute base hashes for all shingles (expensive MD5 only once per shingle)
+        base_hashes = [
+            int(hashlib.md5(s.encode('utf-8')).hexdigest(), 16) 
+            for s in shingles
+        ]
+        
+        # Apply each permutation to pre-computed hashes
         signature = []
         for a, b, prime in self._hash_funcs:
-            min_hash = float('inf')
-            for shingle in shingles:
-                h = self._hash_shingle(shingle, a, b, prime)
-                if h < min_hash:
-                    min_hash = h
-            signature.append(min_hash if min_hash != float('inf') else 0)
+            min_hash = min((a * h + b) % prime for h in base_hashes)
+            signature.append(min_hash)
         return signature
     
     def _compute_signature_datasketch(self, shingles: Set[str]):
@@ -859,13 +866,20 @@ def cluster_duplicates(
     # Find duplicate pairs
     duplicate_pairs = lsh.find_duplicates()
     
-    # Union-Find for clustering
+    # Union-Find for clustering (iterative implementation to avoid recursion limit)
     parent = {idx: idx for idx in range(len(items))}
     
     def find(x):
-        if parent[x] != x:
-            parent[x] = find(parent[x])
-        return parent[x]
+        """Find root with path compression (iterative to avoid RecursionError)."""
+        root = x
+        while parent[root] != root:
+            root = parent[root]
+        # Path compression
+        while parent[x] != root:
+            next_node = parent[x]
+            parent[x] = root
+            x = next_node
+        return root
     
     def union(x, y):
         px, py = find(x), find(y)
@@ -1001,6 +1015,10 @@ def entity_aware_dedup(
     true_duplicates = []
     false_positives = []
     
+    # Cache extracted entities to avoid redundant NER calls
+    # (a document may appear in multiple candidate pairs)
+    entity_cache = {}
+    
     for doc_id1, doc_id2, similarity in stage1_candidates:
         idx1 = doc_id_to_idx.get(doc_id1)
         idx2 = doc_id_to_idx.get(doc_id2)
@@ -1008,9 +1026,14 @@ def entity_aware_dedup(
         if idx1 is None or idx2 is None:
             continue
         
-        # Extract entities
-        e1 = extract_entities(items[idx1])
-        e2 = extract_entities(items[idx2])
+        # Extract entities with caching
+        if idx1 not in entity_cache:
+            entity_cache[idx1] = extract_entities(items[idx1])
+        if idx2 not in entity_cache:
+            entity_cache[idx2] = extract_entities(items[idx2])
+        
+        e1 = entity_cache[idx1]
+        e2 = entity_cache[idx2]
         
         # Compare entities
         is_match, reason = entities_match(e1, e2)
